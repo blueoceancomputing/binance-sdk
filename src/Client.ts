@@ -15,9 +15,16 @@ import OrderBookRequestOptions from './Requests/Options/OrderBookRequestOptions'
 
 @injectable()
 class Client {
-
+  /**
+   * Runner for executing requests
+   * @member {CallRunner} runner
+   */
   private readonly runner: CallRunner;
 
+  /**
+   * Event manager for hooking into the event bus
+   * @member {EventManager} events
+   */
   public readonly events: EventManager;
 
   public constructor() {

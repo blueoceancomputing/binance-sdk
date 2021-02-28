@@ -1,34 +1,19 @@
-import { IConfig } from "config";
-import { inject, injectable } from "inversify";
-import Types from "../Container/Types";
+import { injectable } from "inversify";
 import RequestBuilder from "./RequestBuilder";
+import Endpoints from '../Config/Endpoints';
+import Requests from '../Config/Requests';
+import RequestType from "../Requests/RequestType";
 
 @injectable()
 class RequestBuilderFactory {
   /**
-   * @member {IConfig} configReader
-   * @private
-   */
-  private readonly configReader: IConfig;
-
-  /**
-   * Construct a new request builder factory
-   * 
-   * @param {IConfig} configReader 
-   */
-  public constructor (@inject(Types.Config) configReader: IConfig) {
-    this.configReader = configReader;
-  }
-
-  /**
    * Make a new request builder
    * 
-   * @param {string} request 
+   * @param {RequestType} request 
    * @returns {RequestBuilder}
    */
-  public make (request: string): RequestBuilder {
-    const config = this.configReader.get<any>('binance');
-    return new RequestBuilder (config.requests[request].method, config.endpoints.primary);
+  public make (request: RequestType): RequestBuilder {
+    return new RequestBuilder (Requests[request].method, Endpoints.primary);
   }
 }
 

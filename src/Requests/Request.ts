@@ -1,20 +1,14 @@
-import { IConfig } from 'config';
 import { inject, injectable, interfaces } from 'inversify';
-import Types from '../Container/Types';
+import Endpoints from '../Config/Endpoints';
+import Requests from '../Config/Requests';
+import Endpoint from '../Endpoint';
 import AxiosRequest from '../Http/AxiosRequest';
 import RequestBuilder from '../Http/RequestBuilder';
 import RequestOptions from './Options/RequestOptions';
 import RequestType from './RequestType';
-import Endpoint from '../Endpoint';
 
 @injectable()
 abstract class Request {
-  /**
-   * @member {IConfig} configReader
-   * @protected
-   */
-  protected readonly configReader: IConfig;
-
   /**
    * @member {RequestBuilder} requestBuilder
    * @protected
@@ -26,11 +20,9 @@ abstract class Request {
    * @param {Factory<RequestBuilder>} requestBuilderFactory 
    */
   public constructor (
-    @inject(Types.Config) configReader: IConfig,
     @inject('Factory<RequestBuilder>') requestBuilderFactory: interfaces.Factory<RequestBuilder>
   ) {
     const requestType = this.requestType();
-    this.configReader = configReader;
     this.requestBuilder = <RequestBuilder> requestBuilderFactory(requestType);
     this.setRequestEndpoint(requestType);
     this.addCommmonHeaders();
@@ -77,8 +69,7 @@ abstract class Request {
    * @returns {BinanceRequest}
    */
   public setEndpoint (endpoint: Endpoint): Request {
-    const baseURL = this.configReader.get<string>(`binance.endpoints.${endpoint}`);
-    this.requestBuilder.setBaseURL(baseURL);
+    this.requestBuilder.setBaseURL(Endpoints[endpoint]);
     return this;
   }
 
@@ -89,8 +80,8 @@ abstract class Request {
    * @param request 
    */
   private setRequestEndpoint (request: RequestType): void {
-    const endpoint = this.configReader.get<string>(`binance.requests.${request}.endpoint`);
-    this.requestBuilder.setUrl(endpoint);
+    const requestConfig = Requests[request];
+    this.requestBuilder.setUrl(requestConfig.endpoint);
   }
 }
 

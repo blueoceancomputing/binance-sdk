@@ -1,16 +1,15 @@
 import { AxiosInstance } from 'axios';
 import { interfaces } from 'inversify';
-import config, { IConfig } from 'config';
 import Types from './Types';
 import CallRunner from '../Calls/CallRunner';
 import AxiosBuilder from '../Http/AxiosBuilder';
 import RequestBuilder from '../Http/RequestBuilder';
 import RequestBuilderFactory from '../Http/RequestBuilderFactory';
 import Bind = interfaces.Bind;
+import RequestType from '../Requests/RequestType';
 
 module.exports = (bind: Bind) => {
   bind<CallRunner>(Types.CallRunner).to(CallRunner);
-  bind<IConfig>(Types.Config).toConstantValue(config);
 
   // Axios
   bind<AxiosBuilder>(Types.AxiosBuilder)
@@ -28,7 +27,7 @@ module.exports = (bind: Bind) => {
     .to(RequestBuilderFactory);
   bind<interfaces.Factory<RequestBuilder>>('Factory<RequestBuilder>')
     .toFactory((context: interfaces.Context) => {
-      return (request: string) => {
+      return (request: RequestType) => {
         const factory = context.container.get<RequestBuilderFactory>(
           Types.RequestBuilderFactory
         );

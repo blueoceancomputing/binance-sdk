@@ -1,6 +1,5 @@
 export default {
   Logger: Symbol.for('Logger'),
-  Config: Symbol.for('Config'),
   CallRunner: Symbol.for('CallRunner'),
 
   // Events
