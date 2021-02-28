@@ -1,6 +1,6 @@
 {
-  "name": "coinhub",
-  "version": "1.0.0",
+  "name": "binance-sdk",
+  "version": "0.1.0",
   "main": "dist/Client.js",
   "types": "dist/Client.d.ts",
   "author": "Peter Smith",
